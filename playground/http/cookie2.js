@@ -21,6 +21,7 @@ http.createServer(async, (req, res) => {
         const expires = new Date();
         
         expires.setMinutes(expires.getMinutes() + 5);
+        // http only : javascript로 접근하지 못하도록 한다.( 보안 관련 이슈 발생 우려)
         res.writeHead(302, {
             location : '/',
             'Set-Cookie' : `name=${encodeURIComponent(name)}; Expires=${expires.toGMTString()}; HttpOnly; Path=/`,
