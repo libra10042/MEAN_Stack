@@ -1,9 +1,21 @@
 const express = require('express');
 const path = require('path');
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
 app.set('port', process.env.PORT ||3000);
+
+// 로그 기록
+if (process.env.NODE_ENV === 'production') { 
+    app.use(morgan('combined')); // 배포환경이면
+ } else {
+    app.use(morgan('dev')); // 개발환경이면
+ }
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({extended : true}));
 
 app.use((req, res, next) => {
     console.log('1요청에 실행하고 싶어요');
@@ -15,21 +27,22 @@ app.use((req, res, next) => {
     }catch(error){
         next(error);
     }
-})
+});
 
 
-// 공통 미들웨어
-// app.use('/about', (req, res, next) => {
-//     console.log('about 요청에 대해서만 실행한다. 모든 요청에 실행하고 싶어요');
-//     // next 사용 안하면 넘어가지 않는다.
-//     next();
-// }, (res, req, next) =>{
-//     console.log('2번째 실행');
-// }, (res, req, next) => {
-//     console.log('3번째 실행');
-// })
+app.get('/', (req, res, next) => {
+    req.cookies
+    req.signedCookies;
+    res.cookie('name', encodeURIComponent(name), {
+        expires : new Date(), 
+        httpOnly : true, 
+        path : '/',
+    })
+    res.clearCookie('name', encodeURIComponent(name), {
+        httpOnly : true, 
+        path : '/',
+    })
 
-app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
