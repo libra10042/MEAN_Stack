@@ -5,6 +5,7 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/middleware/all-exception.filter';
 import { HttpExceptionFilter } from './common/middleware/http-exception.filter';
 import { RolesGuard } from './common/auth/auth.guard';
+import { LoggingInterceptor } from './common/Interceptor/loggingInterceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,6 +19,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   app.useGlobalGuards(new RolesGuard());
+
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   await app.listen(3000);
 }

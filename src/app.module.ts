@@ -1,7 +1,8 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { CatsController } from './cats/controller/cats.controller';
 import { CatsService } from './cats/service/cats.service';
+import { LoggingInterceptor } from './common/Interceptor/loggingInterceptor';
 import { HttpExceptionFilter } from './common/middleware/http-exception.filter';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { ValidationPipe } from './common/pipe/validation-pipe';
@@ -15,6 +16,10 @@ import { ValidationPipe } from './common/pipe/validation-pipe';
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
     },
   ],
 })
