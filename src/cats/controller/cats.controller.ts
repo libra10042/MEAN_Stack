@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Post,
   UseFilters,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { CatsService } from '../service/cats.service';
@@ -14,8 +15,10 @@ import { CreateCatDto } from '../dto/CreateCatDto';
 import { Cat } from '../interface/cat.interface';
 import { HttpExceptionFilter } from 'src/common/middleware/http-exception.filter';
 import { ValidationPipe } from 'src/common/pipe/validation-pipe';
+import { RolesGuard } from 'src/common/auth/auth.guard';
 
 @Controller('cats')
+@UseGuards(new RolesGuard())
 export class CatsController {
   constructor(private catsService: CatsService) {}
 
