@@ -1,8 +1,19 @@
-import { Body, Controller, Get, Post, UseFilters } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseFilters,
+  UsePipes,
+} from '@nestjs/common';
 import { CatsService } from '../service/cats.service';
 import { CreateCatDto } from '../dto/CreateCatDto';
 import { Cat } from '../interface/cat.interface';
 import { HttpExceptionFilter } from 'src/common/middleware/http-exception.filter';
+import { ValidationPipe } from 'src/common/pipe/validation-pipe';
 
 @Controller('cats')
 export class CatsController {
@@ -10,12 +21,23 @@ export class CatsController {
 
   @Post()
   @UseFilters(new HttpExceptionFilter())
-  async create(@Body() createCatDto: CreateCatDto) {
+  async create(@Body(new ValidationPipe()) createCatDto: CreateCatDto) {
     this.catsService.create(createCatDto);
   }
 
   @Get()
   async findAll(): Promise<Cat[]> {
     return this.catsService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return this.catsService.findOne(id);
   }
 }

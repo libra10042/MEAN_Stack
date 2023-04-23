@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/middleware/all-exception.filter';
@@ -11,6 +13,9 @@ async function bootstrap() {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+
+  app.useGlobalPipes(new ValidationPipe());
+
   await app.listen(3000);
 }
 bootstrap();
